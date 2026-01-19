@@ -13,6 +13,8 @@ except ImportError:
 
 import numpy as np
 from matplotlib import gridspec
+from matplotlib.lines import Line2D
+
 plt.style.use(["science", "notebook"])#, "grid"])
 plt.rcParams.update({
     "text.usetex": True,
@@ -31,21 +33,51 @@ def Err(string):
 def Print(string):
     print("\033[92m[OUTPUT]\033[0m :: ", string)
 
+    ## Colour schemes
+light_blue = '#56B4E9'
+medium_blue = '#0072B2'
+dark_blue = '#084594'
+light_red = '#E69F00'
+dark_red = '#D55E00'
+light_green = '#009E73'
+dark_green = '#007D4B'
+vivid_purple = '#CC79A7'
+bright_yellow = '#F0E442'
 
 
+def plot_branch(ax_main, filename: str, kinematic: str, bin_width: float, label: str, color: str):
+    infile = up.open(filename)
+    TBranch_kinematic = infile["FlatTree_VARS;1"][kinematic].array()
+    XSec_scale_factor = max(infile["FlatTree_VARS;1"]["fScaleFactor"].array())
+
+    custom_lines = []
+    labels = []
+
+    bins = np.arange(0, 10, step=bin_width)
+    weights = XSec_scale_factor * np.ones_like(TBranch_kinematic) / bin_width
+
+    counts, edges = np.histogram(TBranch_kinematic, bins=bins, weights=weights)
+    sumw2, _      = np.histogram(TBranch_kinematic, bins=bins, weights=weights**2)
+
+    errors  = np.sqrt(sumw2)
+    centers = 0.5 * (edges[1:] + edges[:-1])
+    ax_main.hist(TBranch_kinematic, bins=np.arange(0, 10, step=bin_width), histtype='step', weights=XSec_scale_factor*np.ones_like(TBranch_kinematic)/(bin_width), color=color,linewidth=1.2, label = label)
+    # counts, edges  = np.histogram(TBranch_kinematic, bins=(np.arange(0, 10, step=bin_width)), weights=(XSec_scale_factor*np.ones_like(TBranch_kinematic)/(bin_width)))
+    # errors = np.sqrt(np.histogram(TBranch_kinematic, bins=(np.arange(0, 10, step=bin_width)), weights=(XSec_scale_factor*np.ones_like(TBranch_kinematic)/(bin_width))**2)[0])
+    # centers = 0.5 * (edges[1:] + edges[:-1])
+    ax_main.errorbar(centers, counts, yerr=errors, color=color, linestyle='')
+    ax_main.legend(loc = "upper right")
+
+    # Create a matching line handle for legend
+    custom_lines.append(Line2D([0], [0], color=color, lw=2))
+    labels.append(label)
+    return
 
 
 def plot_flattree_diff_xsec(filename: str, label: str, bin_edges, outfile_name: str):
 
-    outfile_name = outfile_name + "_pred.csv"
-
     infile = up.open(filename)
-    mode = infile["FlatTree_VARS;1"]["cc"].array()
     Elep = 1000*infile["FlatTree_VARS;1"]["ELep"].array()
-
-    Enu = 235.5
-    Mp = 938.2721
-    Mmu = 105.6584
 
     Ep, pdg = [], []
     if("noFSI" in filename):
