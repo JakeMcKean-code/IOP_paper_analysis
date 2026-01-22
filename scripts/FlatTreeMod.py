@@ -33,7 +33,10 @@ def Err(string):
 def Print(string):
     print("\033[92m[OUTPUT]\033[0m :: ", string)
 
-    ## Colour schemes
+
+# ----------------------------------------
+# Colour schemes
+# ----------------------------------------
 light_blue = '#56B4E9'
 medium_blue = '#0072B2'
 dark_blue = '#084594'
@@ -44,14 +47,67 @@ dark_green = '#007D4B'
 vivid_purple = '#CC79A7'
 bright_yellow = '#F0E442'
 
+# ----------------------------------------
+# Load OscProb shared library
+# ----------------------------------------
+import ROOT
+ROOT.gSystem.Load('/home/jm721/Desktop/PhDWork/FirstYear/Minoo_Project/UCM_codes/precomputed_tables/Graphs/Full_EDRMF_RNG_check/IOP_paper/OscProb/build/lib64/libOscProb.so')
+
+# ----------------------------------------
+# Create global PMNS_Fast object
+# ----------------------------------------
+pmns = ROOT.OscProb.PMNS_Fast()
+
+# ----------------------------------------
+# Set oscillation parameters (PDG-ish)
+# ----------------------------------------
+theta12 = 0.584 #7
+theta13 = 0.15 #49
+theta23 = 0.859 #0.785
+deltaCP = 3.4
+
+dm21 = 7.42e-5 #53e-5
+dm32 = 2.44e-3 #50e-3
+
+pmns.SetMix(theta12, theta23, theta13, deltaCP)
+pmns.SetDeltaMsqrs(dm21, dm32)
+
+# ----------------------------------------
+# Set T2K baseline (km)
+# ----------------------------------------
+L = 295.0
+pmns.SetPath(L, 2.8)   # 2.8 g/cm3 density for Earth
+
+# ----------------------------------------
+# Arrays for custom legend lines
+# ----------------------------------------
+
+custom_lines = []
+labels = []
+
+# ----------------------------------------
+# Functions to oscillate given energy
+# input: neutrino energy
+# output: oscillation probability
+# ----------------------------------------
+# Flavour codes:
+# 0: nue
+# 1: numu
+# 2: nutau
+# ----------------------------------------
+
+def OscProb_mumu(E_in: float) -> float:
+    return pmns.Prob(1, 1, E_in, L)  # νμ → νμ
+
+def OscProb_mue(E_in: float) -> float:
+    return pmns.Prob(1, 0, E_in, L)  # νμ → νe
+
 
 def plot_branch(ax_main, filename: str, kinematic: str, bin_width: float, label: str, color: str):
     infile = up.open(filename)
     TBranch_kinematic = infile["FlatTree_VARS;1"][kinematic].array()
     XSec_scale_factor = max(infile["FlatTree_VARS;1"]["fScaleFactor"].array())
 
-    custom_lines = []
-    labels = []
 
     bins = np.arange(0, 10, step=bin_width)
     weights = XSec_scale_factor * np.ones_like(TBranch_kinematic) / bin_width
