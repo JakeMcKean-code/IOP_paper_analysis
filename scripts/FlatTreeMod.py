@@ -1,9 +1,8 @@
 try:
-    import uproot
+    import uproot as up
 except ImportError:
     Err("Uproot not installed. Cannot perform analysis.")
 
-import uproot as up
 import warnings
 
 try:
