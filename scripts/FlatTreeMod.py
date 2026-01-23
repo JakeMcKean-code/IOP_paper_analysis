@@ -61,13 +61,13 @@ pmns = ROOT.OscProb.PMNS_Fast()
 # ----------------------------------------
 # Set oscillation parameters (PDG-ish)
 # ----------------------------------------
-theta12 = 0.584 #7
-theta13 = 0.15 #49
-theta23 = 0.859 #0.785
-deltaCP = 3.4
+theta12 = 0.583
+theta13 = 0.149
+theta23 = 0.857
+deltaCP = 3.44
 
-dm21 = 7.42e-5 #53e-5
-dm32 = 2.44e-3 #50e-3
+dm21 = 7.41e-5
+dm32 = 2.437e-3
 
 pmns.SetMix(theta12, theta23, theta13, deltaCP)
 pmns.SetDeltaMsqrs(dm21, dm32)
