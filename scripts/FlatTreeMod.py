@@ -12,6 +12,7 @@ except ImportError:
 
 import numpy as np
 from matplotlib import gridspec
+from matplotlib.gridspec import GridSpec
 from matplotlib.lines import Line2D
 
 plt.style.use(["science", "notebook"])#, "grid"])

@@ -5,7 +5,7 @@ ROOT.gROOT.SetBatch(True)
 # ---------------------------------
 # Open input file and tree
 # ---------------------------------
-fin = ROOT.TFile.Open("../flattrees/nuwro/NuWro_Ar40_test.flat.root")
+fin = ROOT.TFile.Open("../..//NuWro_Ar40_test.flat.root")
 tree = fin.Get("FlatTree_VARS")
 
 bias_wo_list   = []
@@ -17,13 +17,14 @@ bias_with_list = []
 nentries = tree.GetEntries()
 print("Processing", nentries, "events")
 
-for i in range(nentries):
+for i in range(10000):
 
     tree.GetEntry(i)
 
     ELep     = tree.ELep
     Enu_true = tree.Enu_true
     nfsp     = tree.nfsp
+    mode     = tree.Mode
 
     E  = tree.E
     px = tree.px
@@ -85,6 +86,17 @@ for i in range(nentries):
     # -------------------------
     bias_wo   = enuhad_wo   - Enu_true
     bias_with = enuhad_with - Enu_true
+
+    # Check the > 0 contribution
+    # if(bias_wo > 0):
+    #     print("######")
+    #     print("Mode: ", mode)
+    #     for j in range(nfsp):
+    #         print(f"particle {j}: ", abs(int(pdg[j])) )
+
+    # for j in range(nfsp):
+    #      if(abs(int(pdg[j])) == 3222):
+    #          print(bias_wo, bias_with)
 
     bias_wo_list.append(bias_wo)
     bias_with_list.append(bias_with)

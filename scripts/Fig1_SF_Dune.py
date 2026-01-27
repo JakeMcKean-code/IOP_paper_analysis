@@ -6,8 +6,8 @@ labels = []
 def plot_EnuReco_bias_dune(ax, filename: str, label: str, color: str):
 
     infile = up.open(filename)
-    Enu_t  = 1000*infile["FlatTree_VARS;1"]["Enu_true"].array()
-    mode   = infile["FlatTree_VARS;1"]["cc"].array()
+    Enu_t  = 1000*infile["FlatTree_VARS;53"]["Enu_true"].array()
+    mode   = infile["FlatTree_VARS;53"]["cc"].array()
 
     # ----------------------------------------
     # Compute oscillation weights PER EVENT
@@ -33,7 +33,7 @@ def plot_EnuReco_bias_dune(ax, filename: str, label: str, color: str):
 
 
 fig, ax = plt.subplots()
-plot_EnuReco_bias(ax, "../flattrees/nuwro/NuWro_Ar40_test.flat.root", r"NuWro SF Argon", dark_blue)
+plot_EnuReco_bias(ax, "../../NuWro_Ar40_test.flat.root", r"NuWro SF Argon", dark_blue)
 
 plt.legend(custom_lines, labels)
 plt.title("DUNE Enu reco for all channels")
