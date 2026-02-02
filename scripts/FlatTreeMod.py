@@ -64,7 +64,8 @@ pmns = ROOT.OscProb.PMNS_Fast()
 theta12 = 0.583
 theta13 = 0.149
 theta23 = 0.857
-deltaCP = 3.44
+# deltaCP = 3.44
+deltaCP = -np.pi/2
 
 dm21 = 7.41e-5
 dm32 = 2.437e-3

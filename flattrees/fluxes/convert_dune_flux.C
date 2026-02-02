@@ -7,8 +7,8 @@ void convert_flux_perGeV()
     // ----------------------------
     // Input / output files
     // ----------------------------
-    TFile *infile  = TFile::Open("Dune-numu-flux.root", "READ");
-    TFile *outfile = TFile::Open("output_dune_flux.root", "RECREATE");
+    TFile *infile  = TFile::Open("Dune-numubar-flux.root", "READ");
+    TFile *outfile = TFile::Open("output_dune_numubar_flux.root", "RECREATE");
 
     if (!infile || infile->IsZombie()) {
         std::cerr << "Error opening input file!" << std::endl;
@@ -18,7 +18,7 @@ void convert_flux_perGeV()
     // ----------------------------
     // Get the histogram
     // ----------------------------
-    TH1 *h = (TH1*) infile->Get("numu_flux");   // <-- change name if needed
+    TH1 *h = (TH1*) infile->Get("numubar_flux");   // <-- change name if needed
 
     if (!h) {
         std::cerr << "Histogram not found!" << std::endl;
@@ -26,7 +26,7 @@ void convert_flux_perGeV()
     }
 
     // Clone so we don’t overwrite the original
-    TH1 *h_new = (TH1*) h->Clone("numu_flux");
+    TH1 *h_new = (TH1*) h->Clone("numubar_flux");
     h_new->SetTitle("Flux per GeV");
 
     h_new->Scale(1.0, "width");
