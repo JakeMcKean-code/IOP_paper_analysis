@@ -1,7 +1,7 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, nEvents):
+def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -112,22 +112,37 @@ def plot_Enu_bias_numu(filename, nEvents):
   bias_wo_list = np.array(bias_wo_list)
   bias_with_list = np.array(bias_with_list)
 
-  plt.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/o pion mass")
+  if(withPion == True):
+    if("noFSI" in filename):
+      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/ pion mass noFSI")
+      custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
+      labels.append("Enu had w/ pion mass noFSI")
+    else:
+      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/ pion mass FSI")
+      custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
+      labels.append("Enu had w/ pion mass FSI") 
+      
+  else:
+    if("noFSI" in filename):
+      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/o pion mass noFSI")
+      custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
+      labels.append("Enu had w/o pion mass noFSI")
+    else:
+      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/o pion mass FSI")
+      custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
+      labels.append("Enu had w/o pion mass FSI")
 
-  # Create a matching line handle for legend
-  custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-  labels.append("Enu had w/o pion mass")
-
-  plt.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/ pion mass")
-  custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-  labels.append("Enu had w/ pion mass")
-  plt.legend()
-  # plt.savefig("Fig2_plots/Fig2_DUNE_EnuReco_bias.pdf")
-  plt.show()
 
   fin.Close()
   print("Done.")
 
 
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=1000000)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=100000)
+fig, ax = plt.subplots()
+_events = 100000
+# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=False)
+# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=False)
+
+plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
+plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)
+plt.legend(loc='best', fontsize=15)
+plt.show()

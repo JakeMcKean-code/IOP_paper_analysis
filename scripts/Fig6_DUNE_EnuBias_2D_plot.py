@@ -1,7 +1,7 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, nEvents):
+def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -10,6 +10,7 @@ def plot_Enu_bias_numu(filename, nEvents):
 
   bias_wo_list   = []
   bias_with_list = []
+  Enu_t          = []
   # ---------------------------------
   # Event loop
   # ---------------------------------
@@ -92,42 +93,49 @@ def plot_Enu_bias_numu(filename, nEvents):
       bias_wo   = enuhad_wo   - Enu_true
       bias_with = enuhad_with - Enu_true
 
-      # Check the > 0 contribution
-      # if(bias_wo > 0):
-      #     print("######")
-      #     print("Mode: ", mode)
-      #     for j in range(nfsp):
-      #         print(f"particle {j}: ", abs(int(pdg[j])) )
-
-      # for j in range(nfsp):
-      #      if(abs(int(pdg[j])) == 3222):
-      #          print(bias_wo, bias_with)
-
       bias_wo_list.append(bias_wo)
       bias_with_list.append(bias_with)
+      Enu_t.append(Enu_true)
 
   # ---------------------------------
   # Write output
   # ---------------------------------
   bias_wo_list = np.array(bias_wo_list)
   bias_with_list = np.array(bias_with_list)
+  Enu_t = np.array(Enu_t)
 
-  plt.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/o pion mass")
+  xbins = np.arange(-0.4, 0.4, 0.001)      # bias bins
+  ybins = np.linspace(0, 3, 100)     # Enu bins (adjust range!)
 
-  # Create a matching line handle for legend
-  custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-  labels.append("Enu had w/o pion mass")
+  if(withPion == True):
+    h = ax.hist2d(
+    bias_with_list,
+    Enu_t,
+    bins=[xbins, ybins],
+    cmap="viridis"
+  )
+    plt.colorbar(h[3], ax=ax, label="Counts")
+      
+  else:
+    h = ax.hist2d(
+    bias_wo_list,
+    Enu_t,
+    bins=[xbins, ybins],
+    cmap="viridis"
+  )
+    plt.colorbar(h[3], ax=ax, label="Counts")
 
-  plt.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/ pion mass")
-  custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-  labels.append("Enu had w/ pion mass")
-  plt.legend()
-  # plt.savefig("Fig2_plots/Fig2_DUNE_EnuReco_bias.pdf")
-  plt.show()
 
   fin.Close()
   print("Done.")
 
 
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=1000000)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=100000)
+fig, ax = plt.subplots()
+_events = 100000
+plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=False)
+# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=False)
+
+# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
+# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)
+plt.legend(loc='best', fontsize=15)
+plt.show()

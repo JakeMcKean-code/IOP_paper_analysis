@@ -22,15 +22,43 @@ def plot_Enu_bias_numu(filename, nEvents):
       nevs = nEvents
 
   for i in range(nevs):
+
     tree.GetEntry(i)
 
-    Enu_true = tree.Enu_true * 1000
-    Enu_QE   = tree.Enu_QE * 1000
-    pdg = tree.pdg
+    Enu_true = tree.Enu_true*1000
+    Enu_QE   = tree.Enu_QE*1000
+    nfsp     = tree.nfsp
+    pdg      = tree.pdg
+
+    # -------------------------
+    # CC0pi + Np selection
+    # -------------------------
+    n_proton = 0
+    has_mesons = False
+
+    for j in range(nfsp):
+
+        apdg = abs(int(pdg[j]))
+
+        if apdg == 2212:          # proton
+            n_proton += 1
+
+        elif apdg in [111,211,221,311,321] or apdg > 3000:
+            has_mesons = True
+            break
+
+    # For numubar remove proton requirement
+    if has_mesons:# or n_proton < 1:
+        continue
+
+    # -------------------------
+    # Fill only if passed
+    # -------------------------
     diff = Enu_QE - Enu_true
-    Enu_QE_sel.append(Enu_QE)
-    Enu_t_sel.append(Enu_true)
+
     diff_sel.append(diff)
+    Enu_t_sel.append(Enu_true)
+    Enu_QE_sel.append(Enu_QE)
 
 
   diff_sel = np.array(diff_sel)
@@ -42,11 +70,12 @@ def plot_Enu_bias_numu(filename, nEvents):
   labels.append("")
 
   plt.legend()
-  plt.savefig("Fig2_plots/Fig2_HK_EnuReco_bias.pdf")
+#   plt.savefig("Fig2_plots/Fig2_HK_EnuReco_bias.pdf")
   plt.show()
 
   fin.Close()
   print("Done.")
 
 
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=1000000)
+# plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=100000)
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=100000)

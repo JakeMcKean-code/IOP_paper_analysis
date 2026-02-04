@@ -66,7 +66,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
     else:
         nevs = nEvents
 
-    for i in range(nEvents):
+    for i in range(nevs):
         tree.GetEntry(i)
 
         Enu_true = tree.Enu_true * 1000
@@ -75,21 +75,32 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         nfsp     = tree.nfsp
 
 
+        # -------------------------
+        # CC0pi + Np selection
+        # -------------------------
+        n_proton = 0
+        has_mesons = False
+
         for j in range(nfsp):
+
             apdg = abs(int(pdg[j]))
-            ## Remove any pions or heavy strange mesons in the final state (make pure CC0pi selection)
-            if(apdg == 211 or apdg ==111 or apdg == 311 or apdg > 3000):
-                continue
-            else:
-                # print("Particle: ", apdg)
-                diff = Enu_QE - Enu_true
-                diff_sel.append(diff)
-                Enu_t_sel.append(Enu_true)
-                Enu_QE_sel.append(Enu_QE)
-        # diff = Enu_QE - Enu_true
-        # diff_sel.append(diff)
-        # Enu_t_sel.append(Enu_true)
-        # Enu_QE_sel.append(Enu_QE)
+
+            if apdg == 2212:          # proton
+                n_proton += 1
+
+            elif apdg in [111,211,221,311,321] or apdg > 3000:
+                has_mesons = True
+                break
+
+        # For numubar remove proton requirement
+        if has_mesons or n_proton < 1:
+            continue
+
+        diff = Enu_QE - Enu_true
+        diff_sel.append(diff)
+        Enu_t_sel.append(Enu_true)
+        Enu_QE_sel.append(Enu_QE)
+
 
 
     diff_sel = np.array(diff_sel)
@@ -132,7 +143,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(150,1200)
         ax_ratio.set_xlim(150,1200)
         ax_ratio.set_ylim(0.96,1.04)
-        plt.savefig("plots/Fig1_EnuQE_dm32.pdf")
+        # plt.savefig("Fig1_plots/Fig1_EnuQE_dm32.pdf")
 
     else:
         counts_nom = plot_osc_true(ax, ax_ratio, Enu_t_sel, "default PMNS", vivid_purple, prob_default_numu, True, counts_nom)
@@ -145,14 +156,14 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(300,1200)
         ax_ratio.set_xlim(300,1200)
         ax_ratio.set_ylim(0.96,1.04)
-        plt.savefig("plots/Fig1_EnuTrue_dm32.pdf")
+        # plt.savefig("Fig1_plots/Fig1_EnuTrue_dm32.pdf")
     plt.show()
 
     return
 
 
 
-plot_EnuReco(nEvents = 2000000, IsReco = True)
+plot_EnuReco(nEvents = 200000, IsReco = False)
 
 
 
