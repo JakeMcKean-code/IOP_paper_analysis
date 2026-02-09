@@ -1,7 +1,8 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
+def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
+  fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -20,7 +21,6 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
     nevs = nentries
   else:
     nevs = nEvents
-  print("Processing", nevs, "events")
 
   for i in range(nevs):
       tree.GetEntry(i)
@@ -104,9 +104,6 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
   bias_with_list = np.array(bias_with_list)
   Enu_t = np.array(Enu_t)
 
-  xbins = np.arange(-0.4, 0.4, 0.001)      # bias bins
-  ybins = np.linspace(0, 3, 100)     # Enu bins (adjust range!)
-
   if(withPion == True):
     h = ax.hist2d(
     bias_with_list,
@@ -125,17 +122,21 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
   )
     plt.colorbar(h[3], ax=ax, label="Counts")
 
-
+  plt.savefig(f"Fig6_plots/Fig6_DUNE_EnuRecoBias2D_{plot_name}.pdf")
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
 
-fig, ax = plt.subplots()
 _events = 100000
-plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=False)
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=False)
+_xbins = np.arange(-0.4, 0.4, 0.01)      # bias bins
+_ybins = np.linspace(0, 3, 100)     # Enu bins (adjust range!)
 
-# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)
-plt.legend(loc='best', fontsize=15)
-plt.show()
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name = "noFSI_WithoutPion_numu", withPion=False, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numu", withPion=False, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_WithoutPion_numubar", withPion=False, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numubar", withPion=False, xbins=_xbins, ybins=_ybins)
+
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name = "noFSI_WithPion_numu", withPion=True, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_WithPion_numu", withPion=True, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_WithPion_numubar", withPion=True, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_WithPion_numubar", withPion=True, xbins=_xbins, ybins=_ybins)

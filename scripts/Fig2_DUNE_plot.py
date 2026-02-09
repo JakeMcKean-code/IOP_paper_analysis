@@ -1,7 +1,8 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, nEvents):
+def plot_Enu_bias_numu(filename, nEvents, plot_name):
+  fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -19,7 +20,6 @@ def plot_Enu_bias_numu(filename, nEvents):
     nevs = nentries
   else:
     nevs = nEvents
-  print("Processing", nevs, "events")
 
   for i in range(nevs):
       tree.GetEntry(i)
@@ -112,22 +112,26 @@ def plot_Enu_bias_numu(filename, nEvents):
   bias_wo_list = np.array(bias_wo_list)
   bias_with_list = np.array(bias_with_list)
 
-  plt.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/o pion mass")
+  ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass")
 
   # Create a matching line handle for legend
   custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-  labels.append("Enu had w/o pion mass")
+  labels.append("w/o pion mass")
 
-  plt.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/ pion mass")
+  ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "w/ pion mass")
   custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-  labels.append("Enu had w/ pion mass")
-  plt.legend()
-  # plt.savefig("Fig2_plots/Fig2_DUNE_EnuReco_bias.pdf")
-  plt.show()
+  labels.append("w/ pion mass")
+  ax.legend()
+
+  plt.gca()
+  plt.savefig(f"Fig2_plots/Fig2_DUNE_EnuRecoBias_{plot_name}.pdf")
 
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
+_events = 100000
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name="noFSI_numu")
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_numubar")
 
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=1000000)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=100000)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_numu")
+plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_numubar")

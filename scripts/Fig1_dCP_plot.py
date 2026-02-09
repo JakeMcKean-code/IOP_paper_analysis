@@ -8,8 +8,8 @@ bin_width = 20
 
 def plot_osc_reco(ax, ax_ratio, diff_sel, label, color, weights, nominal, counts_nom):
     ax.hist(diff_sel, bins=np.arange(0, 2000, step=bin_width), histtype='step', weights=weights, color=color,linewidth=1.5, label = label, linestyle = '-')
-    custom_lines.append(Line2D([0], [0], color=color, lw=2, linestyle='-'))
-    labels.append(label)
+    # custom_lines.append(Line2D([0], [0], color=color, lw=2, linestyle='-'))
+    # labels.append(label)
 
     if(nominal == True):
         countsn, _ = np.histogram(diff_sel, weights=weights, bins=(np.arange(0, 2000, step=bin_width)))
@@ -24,8 +24,8 @@ def plot_osc_reco(ax, ax_ratio, diff_sel, label, color, weights, nominal, counts
 
 def plot_osc_true(ax, ax_ratio, diff_sel, label, color, weights, nominal, counts_nom):
     ax.hist(diff_sel, bins=np.arange(0, 2000, step=bin_width), histtype='step', weights=weights, color=color,linewidth=1.5, label = label, linestyle = '-')
-    custom_lines.append(Line2D([0], [0], color=color, lw=2, linestyle='-'))
-    labels.append(label)
+    # custom_lines.append(Line2D([0], [0], color=color, lw=2, linestyle='-'))
+    # labels.append(label)
 
     if(nominal == True):
         countsn, _ = np.histogram(diff_sel, weights=weights, bins=(np.arange(0, 2000, step=bin_width)))
@@ -132,36 +132,39 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         counts_nom = plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "default PMNS", vivid_purple, prob_default_nue, True, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Inc dCP", light_green, prob_plus_dcp, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Dec dCP", dark_green, prob_minus_dcp, False, counts_nom)
-        plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "default PMNS, 5MeV shift in EnuQE", dark_blue, prob_default_nue, False, counts_nom)
+        plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "default PMNS, 5MeV shift", dark_blue, prob_default_nue, False, counts_nom)
 
-        ax.legend(custom_lines, labels, loc = 'lower right')
+        # ax.legend(custom_lines, labels, loc = 'lower right')
+        ax.legend(loc = 'upper right')
         ax_ratio.set_xlabel(r"$E_{\nu}^{\text{\text{QE}}}$ [MeV]")
         ax.set_ylabel("Number of events")
 
         ax.set_xlim(150,1200)
         ax_ratio.set_xlim(150,1200)
-        ax_ratio.set_ylim(0.96,1.04)
-        # plt.savefig("Fig1_plots/Fig1_EnuQE_dCP.pdf")
+        ax_ratio.set_ylim(0.90,1.1)
+        plt.savefig("Fig1_plots/Fig1_EnuQE_dCP.pdf")
 
     else:
         counts_nom = plot_osc_true(ax, ax_ratio, Enu_t_sel, "default PMNS", vivid_purple, prob_default_nue, True, counts_nom)
         plot_osc_true(ax, ax_ratio, Enu_t_sel, "Inc dCP", light_green, prob_plus_dcp, False, counts_nom)
         plot_osc_true(ax, ax_ratio, Enu_t_sel, "Dec dCP", dark_green, prob_minus_dcp, False, counts_nom)
 
-        ax.legend(custom_lines, labels, loc = 'lower right')
+        # ax.legend(custom_lines, labels, loc = 'lower right')
+        ax.legend(loc = 'upper right')
         ax_ratio.set_xlabel(r"$E_{\nu}^{\text{\text{True}}}$ [MeV]")
         ax.set_ylabel("Number of events")
         ax.set_xlim(300,1200)
         ax_ratio.set_xlim(300,1200)
-        ax_ratio.set_ylim(0.96,1.04)
-        # plt.savefig("Fig1_plots/Fig1_EnuTrue_dCP.pdf")
-    plt.show()
+        ax_ratio.set_ylim(0.90,1.1)
+        plt.savefig("Fig1_plots/Fig1_EnuTrue_dCP.pdf")
+    # plt.show()
 
     return
 
 
 
-plot_EnuReco(nEvents = 200000, IsReco = False)
+plot_EnuReco(nEvents = 2000000, IsReco = False)
+plot_EnuReco(nEvents = 2000000, IsReco = True)
 
 
 

@@ -20,7 +20,6 @@ def plot_neutron_energy(ax, filename, nEvents):
         nevs = nentries
     else:
         nevs = nEvents
-    print("Processing", nevs, "events")
 
     for i in range(nevs):
         tree.GetEntry(i)
@@ -57,7 +56,6 @@ def plot_neutron_energy(ax, filename, nEvents):
     # Write output
     # ---------------------------------
     neutron_energy_list = np.array(neutron_energy_list)
-    print(neutron_energy_list)
     if("noFSI" in filename):
         ax.hist(neutron_energy_list, bins=np.arange(500, 4000, step=20), histtype='step', weights=np.ones_like(neutron_energy_list), color=dark_red,linewidth=1.5, label = "Neutron energy noFSI")
         custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
@@ -68,21 +66,26 @@ def plot_neutron_energy(ax, filename, nEvents):
         labels.append("Neutron energy FSI") 
         
     fin.Close()
-    print("Done.")
+    Print(f"Done: {filename}")
 
 
-fig, ax = plt.subplots()
 _events = 1000000
-# plot_neutron_energy(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events)
-# plot_neutron_energy(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events)
+# fig, ax = plt.subplots()
+# plt.vlines(x=Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
+# plt.vlines(x=2*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
+# plt.vlines(x=3*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
 
-plot_neutron_energy(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
-plot_neutron_energy(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
+# ax.set_ylim(0, ax.get_ylim()[1])
+# ax.legend(loc='best', fontsize=15)
+# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
 
-plt.vlines(x=Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-plt.vlines(x=2*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-plt.vlines(x=3*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
+fig2, ax2 = plt.subplots()
+plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
+plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
+plt.vlines(x=Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+plt.vlines(x=2*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+plt.vlines(x=3*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
 
-plt.ylim(0, ax.get_ylim()[1])
-plt.legend(loc='best', fontsize=15)
-plt.show()
+ax2.set_ylim(0, ax2.get_ylim()[1])
+ax2.legend(loc='best', fontsize=15)
+plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numubar.pdf")

@@ -19,7 +19,6 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
     nevs = nentries
   else:
     nevs = nEvents
-  print("Processing", nevs, "events")
 
   for i in range(nevs):
       tree.GetEntry(i)
@@ -114,35 +113,43 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
 
   if(withPion == True):
     if("noFSI" in filename):
-      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/ pion mass noFSI")
+      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "w/ pion mass noFSI")
       custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-      labels.append("Enu had w/ pion mass noFSI")
+      labels.append("w/ pion mass noFSI")
     else:
-      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/ pion mass FSI")
+      ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "w/ pion mass FSI")
       custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-      labels.append("Enu had w/ pion mass FSI") 
+      labels.append("w/ pion mass FSI") 
       
   else:
     if("noFSI" in filename):
-      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "Enu had w/o pion mass noFSI")
+      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "w/o pion mass noFSI")
       custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-      labels.append("Enu had w/o pion mass noFSI")
+      labels.append("w/o pion mass noFSI")
     else:
-      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "Enu had w/o pion mass FSI")
+      ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass FSI")
       custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-      labels.append("Enu had w/o pion mass FSI")
+      labels.append("w/o pion mass FSI")
 
 
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
 
 fig, ax = plt.subplots()
 _events = 100000
-# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=False)
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=False)
+_withPion = False
+plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=_withPion)
+ax.legend(loc='best', fontsize=15)
+plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numu.pdf")
 
-plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
-plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)
-plt.legend(loc='best', fontsize=15)
-plt.show()
+fig2, ax2 = plt.subplots()
+plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=_withPion)
+ax2.legend(loc='best', fontsize=15)
+plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numubar.pdf")
+
+
+# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
+# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)

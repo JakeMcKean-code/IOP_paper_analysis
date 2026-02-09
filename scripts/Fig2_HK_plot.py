@@ -1,7 +1,8 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, nEvents):
+def plot_Enu_bias_numu(filename, label, isNuBar, nEvents, plot_name):
+  fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -48,8 +49,12 @@ def plot_Enu_bias_numu(filename, nEvents):
             break
 
     # For numubar remove proton requirement
-    if has_mesons:# or n_proton < 1:
-        continue
+    if(isNuBar == False):
+      if has_mesons or n_proton < 1:
+          continue
+    else:
+       if has_mesons:
+          continue
 
     # -------------------------
     # Fill only if passed
@@ -65,17 +70,21 @@ def plot_Enu_bias_numu(filename, nEvents):
   Enu_t_sel = np.array(Enu_t_sel)
   Enu_QE_sel = np.array(Enu_QE_sel)
 
-  plt.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = "")
+  ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = label)
   custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-  labels.append("")
+  labels.append(label)
 
-  plt.legend()
-#   plt.savefig("Fig2_plots/Fig2_HK_EnuReco_bias.pdf")
-  plt.show()
+  ax.legend()
+  plt.gca()
+  plt.savefig(f"Fig2_plots/Fig2_HK_EnuRecoBias_{plot_name}.pdf")
+  # plt.show()
 
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
+_events = 100000
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", label = r"no FSI $\nu_{\mu}$", isNuBar = False, nEvents=_events, plot_name="noFSI_numu")
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", label = r"no FSI $\bar{\nu}_{\mu}$", isNuBar = True, nEvents=_events, plot_name="noFSI_numubar")
 
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=100000)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=100000)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_HK_numu.flat.root", label = r"FSI $\nu_{\mu}$", isNuBar = False, nEvents=_events, plot_name="FSI_numu")
+plot_Enu_bias_numu(filename="../../FSI/NuWro_HK_numubar.flat.root", label = r"FSI $\bar{\nu}_{\mu}$", isNuBar = True, nEvents=_events, plot_name="FSI_numubar")

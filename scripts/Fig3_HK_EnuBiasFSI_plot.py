@@ -65,17 +65,17 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
   Enu_QE_sel = np.array(Enu_QE_sel)
 
   if("noFSI" in filename):  
-    ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = "no FSI")
+    ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = "noFSI")
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("no FSI")
+    labels.append("noFSI")
   else:
     ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_red,linewidth=1.5, label = "FSI")
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
     labels.append("FSI")
 
-  ax.set_title(r"$\nu_{\mu}")
+  ax.set_title(r"$\nu_{\mu}$")
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
 def plot_Enu_bias_numubar(ax, filename, nEvents):
   # ---------------------------------
@@ -142,9 +142,9 @@ def plot_Enu_bias_numubar(ax, filename, nEvents):
   Enu_QE_sel = np.array(Enu_QE_sel)
 
   if("noFSI" in filename):  
-    ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = "no FSI")
+    ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_blue,linewidth=1.5, label = "noFSI")
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("no FSI")
+    labels.append("noFSI")
   else:
     ax.hist(diff_sel, bins=np.arange(-1000, 1000, step=10), histtype='step', weights=np.ones_like(diff_sel), color=dark_red,linewidth=1.5, label = "FSI")
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
@@ -152,17 +152,20 @@ def plot_Enu_bias_numubar(ax, filename, nEvents):
 
   ax.set_title(r"$\bar{\nu}_{\mu}$")
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
 
 fig, ax = plt.subplots()
 _events = 100000
-# plot_Enu_bias_numu(ax, filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=_events)
-# plot_Enu_bias_numu(ax, filename="../../FSI/NuWro_HK_numu.flat.root", nEvents=_events)
-
-plot_Enu_bias_numubar(ax, filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=_events)
-plot_Enu_bias_numubar(ax, filename="../../FSI/NuWro_HK_numubar.flat.root", nEvents=_events)
+plot_Enu_bias_numu(ax, filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=_events)
+plot_Enu_bias_numu(ax, filename="../../FSI/NuWro_HK_numu.flat.root", nEvents=_events)
 ax.vlines(x=0, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-plt.legend(loc = 'best', fontsize=15)
-plt.show()
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=100000)
+ax.legend(loc = 'best', fontsize=15)
+plt.savefig("Fig3_plots/Fig3_HK_EnuRecoFSIBias_numu.pdf")
+
+fig2, ax2 = plt.subplots()
+plot_Enu_bias_numubar(ax2, filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=_events)
+plot_Enu_bias_numubar(ax2, filename="../../FSI/NuWro_HK_numubar.flat.root", nEvents=_events)
+ax2.vlines(x=0, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+ax2.legend(loc = 'best', fontsize=15)
+plt.savefig("Fig3_plots/Fig3_HK_EnuRecoFSIBias_numubar.pdf")

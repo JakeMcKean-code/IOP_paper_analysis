@@ -1,7 +1,8 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(ax, filename, nEvents):
+def plot_Enu_bias_numu(filename, nEvents, plot_name, xbins, ybins):
+  fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -64,9 +65,6 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
   Enu_t_sel = np.array(Enu_t_sel)
   Enu_QE_sel = np.array(Enu_QE_sel)
 
-  xbins = np.arange(-1000, 1000, 10)      # bias bins
-  ybins = np.linspace(0, 3000, 300)     # Enu bins (adjust range!)
-
   h = ax.hist2d(
   diff_sel,
   Enu_t_sel,
@@ -74,12 +72,14 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
   cmap="viridis"
 )
   plt.colorbar(h[3], ax=ax, label="Counts")
-
   ax.set_title(r"$\nu_{\mu}$")
+  plt.savefig(f"Fig6_plots/Fig6_HK_EnuRecoBias2D_{plot_name}.pdf")
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
-def plot_Enu_bias_numubar(ax, filename, nEvents):
+
+def plot_Enu_bias_numubar(filename, nEvents, plot_name, xbins, ybins):
+  fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -143,9 +143,6 @@ def plot_Enu_bias_numubar(ax, filename, nEvents):
   Enu_t_sel = np.array(Enu_t_sel)
   Enu_QE_sel = np.array(Enu_QE_sel)
 
-  xbins = np.arange(-1000, 1000, 10)      # bias bins
-  ybins = np.linspace(0, 3000, 300)     # Enu bins (adjust range!)
-
   h = ax.hist2d(
   diff_sel,
   Enu_t_sel,
@@ -155,17 +152,17 @@ def plot_Enu_bias_numubar(ax, filename, nEvents):
   plt.colorbar(h[3], ax=ax, label="Counts")
 
   ax.set_title(r"$\bar{\nu}_{\mu}$")
+  plt.savefig(f"Fig6_plots/Fig6_HK_EnuRecoBias2D_{plot_name}.pdf")
   fin.Close()
-  print("Done.")
+  Print(f"Done: {filename}")
 
 
-fig, ax = plt.subplots()
 _events = 100000
-# plot_Enu_bias_numu(ax, filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=_events)
-# plot_Enu_bias_numu(ax, filename="../../FSI/NuWro_HK_numu.flat.root", nEvents=_events)
+_xbins = np.arange(-1000, 1000, 20)      # bias bins
+_ybins = np.linspace(0, 3000, 300)     # Enu bins 
 
-# plot_Enu_bias_numubar(ax, filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=_events)
-plot_Enu_bias_numubar(ax, filename="../../FSI/NuWro_HK_numubar.flat.root", nEvents=_events)
-plt.legend(loc = 'best', fontsize=15)
-plt.show()
-# plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=100000)
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", nEvents=_events, plot_name="noFSI_numu", xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../FSI/NuWro_HK_numu.flat.root", nEvents=_events, plot_name="FSI_numu", xbins=_xbins, ybins=_ybins)
+
+plot_Enu_bias_numubar(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_numubar", xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numubar(filename="../../FSI/NuWro_HK_numubar.flat.root", nEvents=_events, plot_name="FSI_numubar", xbins=_xbins, ybins=_ybins)
