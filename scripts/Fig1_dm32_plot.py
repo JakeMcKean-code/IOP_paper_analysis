@@ -134,7 +134,8 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         counts_nom = plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "default PMNS", vivid_purple, prob_default_numu, True, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Inc dm32", light_green, prob_plus_dm2, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Dec dm32", dark_green, prob_minus_dm2, False, counts_nom)
-        plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "default PMNS, 5MeV", dark_blue, prob_default_numu, False, counts_nom)
+        plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "5MeV shift", dark_blue, prob_default_numu, False, counts_nom)
+        plot_osc_reco(ax, ax_ratio, Enu_QE_sel+10, "10MeV shift", dark_red, prob_default_numu, False, counts_nom)
 
         # ax.legend(custom_lines, labels, loc = 'lower right')
         ax.legend(loc = 'upper right')
@@ -159,14 +160,14 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax_ratio.set_xlim(300,1200)
         ax_ratio.set_ylim(0.95,1.05)
         plt.savefig("Fig1_plots/Fig1_EnuTrue_dm32.pdf")
-    # plt.show()
+    plt.show()
 
     return
 
 
 
-plot_EnuReco(nEvents = 2000000, IsReco = False)
-plot_EnuReco(nEvents = 2000000, IsReco = True)
+# plot_EnuReco(nEvents = 200000, IsReco = False)
+plot_EnuReco(nEvents = 5000000, IsReco = True)
 
 
 

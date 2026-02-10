@@ -16,6 +16,7 @@ def plot_neutron_energy(ax, filename, nEvents):
     # ---------------------------------
     nentries = tree.GetEntries()
     nevs = 0
+    fScaleFactor = 0
     if(nEvents == -1):
         nevs = nentries
     else:
@@ -28,12 +29,16 @@ def plot_neutron_energy(ax, filename, nEvents):
 
         E  = tree.E
         pdg = tree.pdg
-
+        Enu = tree.Enu_true
+        ELep = tree.ELep
+        q0 = Enu - ELep
+        _fscalefactor = tree.fScaleFactor
+        if(_fscalefactor > fScaleFactor):
+            fScaleFactor = _fscalefactor
         # -------------------------
-        # Lepton energy
+        # neutron kinetic energy
         # -------------------------
-        neutron_energy   = 0
-
+        neutron_KE   = 0
         # Loop over final state particles
         for j in range(nfsp):
 
@@ -44,24 +49,29 @@ def plot_neutron_energy(ax, filename, nEvents):
             # -------------------------
             # Get neutron
             # -------------------------
-            if apdg == 2112: # Remove contribution > 0
-                neutron_energy += Ej
+            if apdg == 2112: 
+                neutron_KE += (Ej - Mneutron) # T_neutron
 
         # -------------------------
         # Fill
         # -------------------------
-        neutron_energy_list.append(neutron_energy)
+        if(neutron_KE != 0):
+            neutron_energy_list.append(neutron_KE/q0)
 
     # ---------------------------------
     # Write output
     # ---------------------------------
     neutron_energy_list = np.array(neutron_energy_list)
+    bin_width = 10
+    bins = np.arange(0, 1100, step=bin_width)
+    weights = fScaleFactor*np.ones_like(neutron_energy_list)/bin_width
+    print(neutron_energy_list)
     if("noFSI" in filename):
-        ax.hist(neutron_energy_list, bins=np.arange(500, 4000, step=20), histtype='step', weights=np.ones_like(neutron_energy_list), color=dark_red,linewidth=1.5, label = "Neutron energy noFSI")
+        ax.hist(neutron_energy_list, bins=bins, histtype='step', weights=weights, color=dark_red,linewidth=1.5, label = "noFSI")
         custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
         labels.append("Neutron energy noFSI")
     else:
-        ax.hist(neutron_energy_list, bins=np.arange(500, 4000, step=20), histtype='step', weights=np.ones_like(neutron_energy_list), color=dark_blue,linewidth=1.5, label = "Neutron energy FSI")
+        ax.hist(neutron_energy_list, bins=bins, histtype='step', weights=weights, color=dark_blue,linewidth=1.5, label = "FSI")
         custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
         labels.append("Neutron energy FSI") 
         
@@ -69,7 +79,7 @@ def plot_neutron_energy(ax, filename, nEvents):
     Print(f"Done: {filename}")
 
 
-_events = 1000000
+_events = -1
 # fig, ax = plt.subplots()
 # plt.vlines(x=Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
 # plt.vlines(x=2*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
@@ -77,15 +87,18 @@ _events = 1000000
 
 # ax.set_ylim(0, ax.get_ylim()[1])
 # ax.legend(loc='best', fontsize=15)
+# plt.show()
 # plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
 
 fig2, ax2 = plt.subplots()
 plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
 plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
-plt.vlines(x=Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
-plt.vlines(x=2*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
-plt.vlines(x=3*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
-
+# plt.vlines(x=Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+# plt.vlines(x=2*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+# plt.vlines(x=3*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
+ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
 ax2.set_ylim(0, ax2.get_ylim()[1])
 ax2.legend(loc='best', fontsize=15)
+# plt.show()
 plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numubar.pdf")

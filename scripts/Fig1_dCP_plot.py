@@ -71,8 +71,9 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
 
         Enu_true = tree.Enu_true * 1000
         Enu_QE   = tree.Enu_QE * 1000
-        pdg = tree.pdg
+        pdg      = tree.pdg
         nfsp     = tree.nfsp
+        mode     = tree.Mode
 
 
         # -------------------------
@@ -95,6 +96,8 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         # For numubar remove proton requirement
         if has_mesons or n_proton < 1:
             continue
+        # if mode != 1: # onyl do CCQE?
+        #     continue
 
         diff = Enu_QE - Enu_true
         diff_sel.append(diff)
@@ -142,7 +145,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(150,1200)
         ax_ratio.set_xlim(150,1200)
         ax_ratio.set_ylim(0.90,1.1)
-        plt.savefig("Fig1_plots/Fig1_EnuQE_dCP.pdf")
+        # plt.savefig("Fig1_plots/Fig1_EnuQE_dCP.pdf")
 
     else:
         counts_nom = plot_osc_true(ax, ax_ratio, Enu_t_sel, "default PMNS", vivid_purple, prob_default_nue, True, counts_nom)
@@ -156,15 +159,15 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(300,1200)
         ax_ratio.set_xlim(300,1200)
         ax_ratio.set_ylim(0.90,1.1)
-        plt.savefig("Fig1_plots/Fig1_EnuTrue_dCP.pdf")
-    # plt.show()
+        # plt.savefig("Fig1_plots/Fig1_EnuTrue_dCP.pdf")
+    plt.show()
 
     return
 
 
 
-plot_EnuReco(nEvents = 2000000, IsReco = False)
-plot_EnuReco(nEvents = 2000000, IsReco = True)
+plot_EnuReco(nEvents = 200000, IsReco = False)
+# plot_EnuReco(nEvents = 2000000, IsReco = True)
 
 
 
