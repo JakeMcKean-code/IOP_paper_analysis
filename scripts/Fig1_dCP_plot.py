@@ -136,6 +136,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Inc dCP", light_green, prob_plus_dcp, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Dec dCP", dark_green, prob_minus_dcp, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "default PMNS, 5MeV shift", dark_blue, prob_default_nue, False, counts_nom)
+        plot_osc_reco(ax, ax_ratio, Enu_QE_sel-5, "default PMNS, -5MeV shift", dark_red, prob_default_nue, False, counts_nom)
 
         # ax.legend(custom_lines, labels, loc = 'lower right')
         ax.legend(loc = 'upper right')
@@ -145,7 +146,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(150,1200)
         ax_ratio.set_xlim(150,1200)
         ax_ratio.set_ylim(0.90,1.1)
-        # plt.savefig("Fig1_plots/Fig1_EnuQE_dCP.pdf")
+        plt.savefig("Fig1_plots/Fig1_EnuQE_dCP_both_shifts.pdf")
 
     else:
         counts_nom = plot_osc_true(ax, ax_ratio, Enu_t_sel, "default PMNS", vivid_purple, prob_default_nue, True, counts_nom)
@@ -166,8 +167,8 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
 
 
 
-plot_EnuReco(nEvents = 200000, IsReco = False)
-# plot_EnuReco(nEvents = 2000000, IsReco = True)
+# plot_EnuReco(nEvents = 200000, IsReco = False)
+plot_EnuReco(nEvents = 5000000, IsReco = True)
 
 
 
