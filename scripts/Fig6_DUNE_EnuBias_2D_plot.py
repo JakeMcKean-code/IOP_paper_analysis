@@ -29,6 +29,7 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
       Enu_true = tree.Enu_true
       nfsp     = tree.nfsp
       mode     = tree.Mode
+      bad_event = False
 
       E  = tree.E
       px = tree.px
@@ -57,6 +58,7 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
           # Heavy baryons (both defs)
           # -------------------------
           if apdg > 3000: # Remove contribution > 0
+              bad_event = True
               continue
           if apdg > 2300 and apdg < 3000:
               enuhad_wo   += Ej
@@ -90,12 +92,14 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
       # -------------------------
       # Fill
       # -------------------------
-      bias_wo   = enuhad_wo   - Enu_true
-      bias_with = enuhad_with - Enu_true
-
-      bias_wo_list.append(bias_wo)
-      bias_with_list.append(bias_with)
-      Enu_t.append(Enu_true)
+      if(bad_event == False):
+        bias_wo   = enuhad_wo   - Enu_true
+        bias_with = enuhad_with - Enu_true
+        bias_wo_list.append(bias_wo)
+        bias_with_list.append(bias_with)
+        Enu_t.append(Enu_true)
+      else:
+         continue
 
   # ---------------------------------
   # Write output
@@ -127,7 +131,7 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
   Print(f"Done: {filename}")
 
 
-_events = 100000
+_events = -1
 _xbins = np.arange(-0.4, 0.4, 0.01)      # bias bins
 _ybins = np.linspace(0, 3, 100)     # Enu bins (adjust range!)
 

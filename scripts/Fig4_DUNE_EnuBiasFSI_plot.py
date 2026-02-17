@@ -28,6 +28,7 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
       Enu_true = tree.Enu_true
       nfsp     = tree.nfsp
       mode     = tree.Mode
+      bad_event = False
       _fscalefactor = tree.fScaleFactor
       if(_fscalefactor > fScaleFactor):
          fScaleFactor = _fscalefactor
@@ -59,6 +60,7 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
           # Heavy baryons (both defs)
           # -------------------------
           if apdg > 3000: # Remove contribution > 0
+              bad_event = True
               continue
           if apdg > 2300 and apdg < 3000:
               enuhad_wo   += Ej
@@ -92,22 +94,14 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
       # -------------------------
       # Fill
       # -------------------------
-      bias_wo   = enuhad_wo   - Enu_true
-      bias_with = enuhad_with - Enu_true
+      if(bad_event == False):
+        bias_wo   = enuhad_wo   - Enu_true
+        bias_with = enuhad_with - Enu_true
 
-      # Check the > 0 contribution
-      # if(bias_wo > 0):
-      #     print("######")
-      #     print("Mode: ", mode)
-      #     for j in range(nfsp):
-      #         print(f"particle {j}: ", abs(int(pdg[j])) )
-
-      # for j in range(nfsp):
-      #      if(abs(int(pdg[j])) == 3222):
-      #          print(bias_wo, bias_with)
-
-      bias_wo_list.append(bias_wo)
-      bias_with_list.append(bias_with)
+        bias_wo_list.append(bias_wo)
+        bias_with_list.append(bias_with)
+      else:
+         continue
 
   # ---------------------------------
   # Write output
@@ -162,6 +156,23 @@ ax2.legend(loc='best', fontsize=15)
 ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
 ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
 plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numubar.pdf")
+
+_withPion = False
+ax2.clear()
+plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=_withPion)
+ax2.legend(loc='best', fontsize=15)
+ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numu.pdf")
+
+ax2.clear()
+plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=_withPion)
+ax2.legend(loc='best', fontsize=15)
+ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numubar.pdf")
 
 
 # plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)

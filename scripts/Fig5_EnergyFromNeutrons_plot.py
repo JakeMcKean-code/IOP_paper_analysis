@@ -24,7 +24,7 @@ def plot_neutron_energy(ax, filename, nEvents):
 
     for i in range(nevs):
         tree.GetEntry(i)
-
+        bad_event = False
         nfsp     = tree.nfsp
 
         E  = tree.E
@@ -45,7 +45,9 @@ def plot_neutron_energy(ax, filename, nEvents):
             apdg = abs(int(pdg[j]))
             Ej   = float(E[j])*1000
 
-
+            if(apdg>3000):
+                bad_event = True
+                continue
             # -------------------------
             # Get neutron
             # -------------------------
@@ -55,9 +57,11 @@ def plot_neutron_energy(ax, filename, nEvents):
         # -------------------------
         # Fill
         # -------------------------
-        if(neutron_KE != 0):
-            neutron_energy_list.append(neutron_KE/q0)
-
+        if(bad_event == False):
+            if(neutron_KE != 0):
+                neutron_energy_list.append(neutron_KE/q0)
+        else:
+            continue
     # ---------------------------------
     # Write output
     # ---------------------------------
@@ -80,28 +84,22 @@ def plot_neutron_energy(ax, filename, nEvents):
 
 
 _events = -1
-# fig, ax = plt.subplots()
-# plt.vlines(x=Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-# plt.vlines(x=2*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-# plt.vlines(x=3*Mneutron, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
-
-# ax.set_ylim(0, ax.get_ylim()[1])
-# ax.legend(loc='best', fontsize=15)
-# plt.show()
-# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
 
 fig2, ax2 = plt.subplots()
-# plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
-# plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
-plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events)
-plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events)
+# plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events)
+# plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events)
+# ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
+# ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
+# ax2.set_ylim(0, ax2.get_ylim()[1])
+# ax2.legend(loc='best', fontsize=15)
+# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
 
-# plt.vlines(x=Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
-# plt.vlines(x=2*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
-# plt.vlines(x=3*Mneutron, ymin=0, ymax = ax2.get_ylim()[1], color='black', linestyles='--')
+
+ax2.clear()
+plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
+plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
 ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
 ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
 ax2.set_ylim(0, ax2.get_ylim()[1])
 ax2.legend(loc='best', fontsize=15)
-# plt.show()
-plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
+plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numubar.pdf")

@@ -27,6 +27,7 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
     for i in range(nevs):
         tree.GetEntry(i)
         has_neutron = False
+        bad_event = False
         ELep     = tree.ELep
         Enu_true = tree.Enu_true
         nfsp     = tree.nfsp
@@ -55,43 +56,52 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
 
             p2 = pxj*pxj + pyj*pyj + pzj*pzj
 
-            # Check for neutron
+            # Check neutron
             if apdg == 2112:
                 has_neutron = True
 
             # -------------------------
-            # Heavy baryons (both defs)
+            # Remove heavy stuff
             # -------------------------
-            if apdg > 3000: # Remove contribution > 0
+            if apdg > 3000:
+                bad_event = True
                 continue
-            if apdg > 2300 and apdg < 3000:
+
+            # -------------------------
+            # Heavy baryons
+            # -------------------------
+            if 2300 < apdg < 3000:
                 enuhad_wo   += Ej
                 enuhad_with += Ej
                 continue
 
             # -------------------------
-            # Definition 1 (no pion mass subtraction)
+            # Definition 1
             # -------------------------
-            if (apdg == 11 or (apdg > 17 and apdg < 2000)) and (apdg != 211):
+            if (apdg == 11 or (17 < apdg < 2000)) and apdg != 211:
+
                 enuhad_wo += Ej
 
-            elif apdg == 2212 or apdg == 211:
+            elif apdg in (2212, 211):
+
                 mass2 = Ej*Ej - p2
+
                 if mass2 > 0:
-                    mass = np.sqrt(mass2)
-                    enuhad_wo += (Ej - mass)
+                    enuhad_wo += Ej - np.sqrt(mass2)
 
             # -------------------------
-            # Definition 2 (with pion masses)
+            # Definition 2
             # -------------------------
-            if (apdg == 11 or (apdg > 17 and apdg < 2000)):
+            if (apdg == 11 or (17 < apdg < 2000)):
+
                 enuhad_with += Ej
 
             elif apdg == 2212:
+
                 mass2 = Ej*Ej - p2
+
                 if mass2 > 0:
-                    mass = np.sqrt(mass2)
-                    enuhad_with += (Ej - mass)
+                    enuhad_with += Ej - np.sqrt(mass2)
 
         # -------------------------
         # Fill
@@ -99,13 +109,19 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
         bias_wo   = enuhad_wo   - Enu_true
         bias_with = enuhad_with - Enu_true
 
-        # Total
-        bias_wo_list.append(bias_wo)
-        bias_with_list.append(bias_with)
+        # if(has_neutron==False and bias_with < -0.2):
+            # Print(f"bias: {bias_with}| mode: {mode}| PDGs: {event_pdg}")
+        if(bad_event == False):
+            # Total
+            bias_wo_list.append(bias_wo)
+            bias_with_list.append(bias_with)
 
-        # By neutron content
-        bias_wo_by_n[has_neutron].append(bias_wo)
-        bias_with_by_n[has_neutron].append(bias_with)
+            # By neutron content
+            bias_wo_by_n[has_neutron].append(bias_wo)
+            bias_with_by_n[has_neutron].append(bias_with)
+        else:
+            continue
+
 
     # ---------------------------------
     # Write output
@@ -121,20 +137,20 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
         True:  dict(color="purple", linestyle="--",  label="With neutron"),
     }
 
-    ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_with_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass")
+    ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_with_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass correction")
 
     # Create a matching line handle for legend
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("w/o pion mass")
+    labels.append("w/o pion mass correction")
 
     # ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "w/ pion mass")
     # custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
     # labels.append("w/ pion mass")
 
     bins = np.arange(-3, 1, step=0.04)
-    # w/o pion mass, by neutron
-    vals_no  = bias_with_by_n[False]
-    vals_yes = bias_with_by_n[True]
+    # w/ pion mass correction, by neutron
+    vals_no  = bias_wo_by_n[False]
+    vals_yes = bias_wo_by_n[True]
 
     ax.hist(
         [vals_no, vals_yes],   # list of arrays
@@ -153,8 +169,8 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
     Print(f"Done: {filename}")
 
 _events = -1
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name="WithPion_noFSI_numu")
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="WithPion_noFSI_numubar")
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name="WithoutPion_noFSI_numu")
+plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="WithoutPion_noFSI_numubar")
 
 # plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_numu")
 # plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_numubar")
