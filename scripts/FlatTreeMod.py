@@ -77,6 +77,7 @@ pmns.SetDeltaMsqrs(dm21, dm32)
 # Set T2K baseline (km)
 # ----------------------------------------
 L = 295.0
+# L = 1285.0 // DUNE
 pmns.SetPath(L, 2.8)   # 2.8 g/cm3 density for Earth
 
 # ----------------------------------------

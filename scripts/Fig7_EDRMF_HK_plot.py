@@ -1,7 +1,7 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(ax, filename, nEvents):
+def plot_Enu_bias_numu(ax, filename, label, nEvents):
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -72,16 +72,16 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
   bins = np.arange(-1000, 1000, step=bin_width)
   weights = fScaleFactor*np.ones_like(diff_sel)/bin_width
 
-  if("noFSI" in filename):  
-    ax.hist(diff_sel, bins=bins, histtype='step', weights=weights, color=dark_blue,linewidth=1.5, label = "noFSI")
+  if(label == "ED-RMF"):  
+    ax.hist(diff_sel, bins=bins, histtype='step', weights=weights, color=dark_blue,linewidth=1.5, label = label)
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("noFSI")
-  else:
-    ax.hist(diff_sel, bins=bins, histtype='step', weights=weights, color=dark_red,linewidth=1.5, label = "FSI")
+    labels.append(label)
+  elif(label == "RPWIA"):
+    ax.hist(diff_sel, bins=bins, histtype='step', weights=weights, color=dark_red,linewidth=1.5, label = label)
     custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("FSI")
+    labels.append(label)
 
-  ax.set_title(r"$\nu_{\mu}$")
+  ax.set_title(r"HK $\nu_{\mu}$")
   fin.Close()
   Print(f"Done: {filename}")
 
@@ -170,10 +170,10 @@ def plot_Enu_bias_numubar(ax, filename, nEvents):
   Print(f"Done: {filename}")
 
 
-_events = -1
+_events = 100000
 fig, ax = plt.subplots()
-plot_Enu_bias_numubar(ax, filename="../../FSI/NEUT_HK_EDRMF_numu.flat.root", nEvents=_events)
-plot_Enu_bias_numubar(ax, filename="../../FSI/NEUT_HK_EDRMF_numubar.flat.root", nEvents=_events)
+plot_Enu_bias_numu(ax, filename="../../FSI/NEUT_HK_EDRMF_numu.flat.root", label="ED-RMF", nEvents=_events)
+plot_Enu_bias_numu(ax, filename="../../FSI/NEUT_HK_RPWIA_numu.flat.root", label="RPWIA", nEvents=_events)
 ax.vlines(x=0, ymin=0, ymax = ax.get_ylim()[1], color='black', linestyles='--')
 ax.legend(loc = 'best', fontsize=15)
 ax.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")

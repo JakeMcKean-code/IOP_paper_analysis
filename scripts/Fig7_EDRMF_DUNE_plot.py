@@ -1,7 +1,7 @@
 from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
+def plot_Enu_bias_numu(ax, filename, label, nEvents, withPion):
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -115,53 +115,53 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
   bias_wo_list = np.array(bias_wo_list)
   bias_with_list = np.array(bias_with_list)
 
-  bin_width = 0.04
-  bins = np.arange(-3, 1, step=bin_width)
+  bin_width = 0.05
+  bins = np.arange(-0.7, 0+bin_width, step=bin_width)
   weights_with = fScaleFactor*np.ones_like(bias_with_list)/bin_width
   weights_wo = fScaleFactor*np.ones_like(bias_wo_list)/bin_width
 
   if(withPion == True):
-    if("bar" in filename):
-      ax.hist(bias_with_list, bins=bins, histtype='step', weights=weights_with, color=dark_red,linewidth=1.5, label = "w/ pion mass numubar")
+    if(label == "ED-RMF"):
+      ax.hist(bias_with_list, bins=bins, histtype='step', weights=weights_with, color=dark_red,linewidth=1.5, label = f"{label} w/ pion mass")
       custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-      labels.append("w/ pion mass numubar")
-    else:
-      ax.hist(bias_with_list, bins=bins, histtype='step', weights=weights_with, color=dark_blue,linewidth=1.5, label = "w/ pion mass numu")
+      labels.append(f"{label} w/ pion mass")
+    elif (label == "RPWIA"):
+      ax.hist(bias_with_list, bins=bins, histtype='step', weights=weights_with, color=dark_blue,linewidth=1.5, label = f"{label} w/ pion mass")
       custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-      labels.append("w/ pion mass numu") 
+      labels.append(f"{label} w/ pion mass") 
       
   else:
-    if("bar" in filename):
-      ax.hist(bias_wo_list, bins=bins, histtype='step', weights=weights_wo, color=dark_red,linewidth=1.5, label = "w/o pion mass numubar")
+    if(label == "ED-RMF"):
+      ax.hist(bias_wo_list, bins=bins, histtype='step', weights=weights_wo, color=dark_red,linewidth=1.5, label = f"{label} w/o pion mass")
       custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-      labels.append("w/o pion mass numubar")
-    else:
-      ax.hist(bias_wo_list, bins=bins, histtype='step', weights=weights_wo, color=dark_blue,linewidth=1.5, label = "w/o pion mass numu")
+      labels.append(f"{label}w/o pion mass")
+    elif (label == "RPWIA"):
+      ax.hist(bias_wo_list, bins=bins, histtype='step', weights=weights_wo, color=dark_blue,linewidth=1.5, label = f"{label} w/o pion mass")
       custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-      labels.append("w/o pion mass numu")
+      labels.append(f"{label}w/o pion mass")
 
 
   fin.Close()
   Print(f"Done: {filename}")
 
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(1,2)
+_events = 10000
+_withPion = False
+plot_Enu_bias_numu(ax=ax[0], filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", label="ED-RMF", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax[0], filename="../../FSI/RPWIA_1M_Cas_numu_Ar40.flat.root", label="RPWIA", nEvents=_events, withPion=_withPion)
+ax[0].legend(loc='best', fontsize=15)
+ax[0].set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+ax[0].set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+
 _events = 10000
 _withPion = True
-plot_Enu_bias_numu(ax=ax, filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", nEvents=_events, withPion=_withPion)
-plot_Enu_bias_numu(ax=ax, filename="../../FSI/NEUT_Ar40_EDRMF_numubar.flat.root", nEvents=_events, withPion=_withPion)
-ax.legend(loc='best', fontsize=15)
-ax.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
-ax.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+plot_Enu_bias_numu(ax=ax[1], filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", label="ED-RMF", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax[1], filename="../../FSI/RPWIA_1M_Cas_numu_Ar40.flat.root", label="RPWIA", nEvents=_events, withPion=_withPion)
+ax[1].legend(loc='best', fontsize=15)
+ax[1].set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+ax[1].set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
 plt.show()
 
-# ax.clear()
-# _withPion = False
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", nEvents=_events, withPion=_withPion)
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NEUT_Ar40_EDRMF_numubar.flat.root", nEvents=_events, withPion=_withPion)
-# ax.legend(loc='best', fontsize=15)
-# ax.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
-# ax.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
-# plt.show()
-# plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numu.pdf")
+
 
