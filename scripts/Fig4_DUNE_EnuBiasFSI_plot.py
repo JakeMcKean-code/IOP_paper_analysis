@@ -102,7 +102,6 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
         bias_with_list.append(bias_with)
       else:
          continue
-
   # ---------------------------------
   # Write output
   # ---------------------------------
@@ -140,40 +139,41 @@ def plot_Enu_bias_numu(ax, filename, nEvents, withPion):
 
 
 fig, ax = plt.subplots()
-_events = -1
+_events = 10000
 _withPion = True
-plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=_withPion)
-plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=_withPion)
-ax.legend(loc='best', fontsize=15)
-ax.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
-ax.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
-plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numu.pdf")
+# plot_Enu_bias_numu(ax=ax, filename="../../Remade_April26/DUNE/DUNE_numu_noFSI.flat.root", nEvents=_events, withPion=_withPion)
+# plot_Enu_bias_numu(ax=ax, filename="../../Remade_April26/DUNE/DUNE_numu_FSI.flat.root", nEvents=_events, withPion=_withPion)
+# ax.legend(loc='best', fontsize=15)
+# ax.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+# ax.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+# plt.show()
+# plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numu.pdf")
 
 fig2, ax2 = plt.subplots()
-plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=_withPion)
-plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=_withPion)
-ax2.legend(loc='best', fontsize=15)
-ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
-ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
-plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numubar.pdf")
+# plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_noFSI.flat.root", nEvents=_events, withPion=_withPion)
+# plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_FSI.flat.root", nEvents=_events, withPion=_withPion)
+# ax2.legend(loc='best', fontsize=15)
+# ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+# ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+# plt.show()
+# plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithPion_numubar.pdf")
 
 _withPion = False
+# ax2.clear()
+# plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numu_noFSI.flat.root", nEvents=_events, withPion=_withPion)
+# plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numu_FSI.flat.root", nEvents=_events, withPion=_withPion)
+# ax2.legend(loc='best', fontsize=15)
+# ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
+# ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
+# plt.show()
+# plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numu.pdf")
+
 ax2.clear()
-plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, withPion=_withPion)
-plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_noFSI.flat.root", nEvents=_events, withPion=_withPion)
+plot_Enu_bias_numu(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_FSI.flat.root", nEvents=_events, withPion=_withPion)
 ax2.legend(loc='best', fontsize=15)
 ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
 ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
-plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numu.pdf")
+plt.show()
+# plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numubar.pdf")
 
-ax2.clear()
-plot_Enu_bias_numu(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=_withPion)
-plot_Enu_bias_numu(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=_withPion)
-ax2.legend(loc='best', fontsize=15)
-ax2.set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
-ax2.set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
-plt.savefig("Fig4_plots/Fig4_DUNE_EnuRecoFSIBias_WithoutPion_numubar.pdf")
-
-
-# plot_Enu_bias_numu(ax=ax, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, withPion=True)
-# plot_Enu_bias_numu(ax=ax, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, withPion=True)

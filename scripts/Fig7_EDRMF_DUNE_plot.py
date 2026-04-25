@@ -2,6 +2,7 @@ from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
 def plot_Enu_bias_numu(ax, filename, label, nEvents, withPion):
+  Print(f"Reading: {filename}")
   # ---------------------------------
   # Open input file and tree
   # ---------------------------------
@@ -95,17 +96,6 @@ def plot_Enu_bias_numu(ax, filename, label, nEvents, withPion):
       bias_wo   = enuhad_wo   - Enu_true
       bias_with = enuhad_with - Enu_true
 
-      # Check the > 0 contribution
-      # if(bias_wo > 0):
-      #     print("######")
-      #     print("Mode: ", mode)
-      #     for j in range(nfsp):
-      #         print(f"particle {j}: ", abs(int(pdg[j])) )
-
-      # for j in range(nfsp):
-      #      if(abs(int(pdg[j])) == 3222):
-      #          print(bias_wo, bias_with)
-
       bias_wo_list.append(bias_wo)
       bias_with_list.append(bias_with)
 
@@ -142,11 +132,10 @@ def plot_Enu_bias_numu(ax, filename, label, nEvents, withPion):
 
 
   fin.Close()
-  Print(f"Done: {filename}")
 
 
 fig, ax = plt.subplots(1,2)
-_events = 10000
+_events = 100000
 _withPion = False
 plot_Enu_bias_numu(ax=ax[0], filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", label="ED-RMF", nEvents=_events, withPion=_withPion)
 plot_Enu_bias_numu(ax=ax[0], filename="../../FSI/RPWIA_1M_Cas_numu_Ar40.flat.root", label="RPWIA", nEvents=_events, withPion=_withPion)
@@ -154,7 +143,7 @@ ax[0].legend(loc='best', fontsize=15)
 ax[0].set_xlabel(r"$E_{\nu}^{\text{bias}}$ [MeV]")
 ax[0].set_ylabel(r"$\text{d}\sigma/\text{d}E_{\nu}^{\text{bias}}$ [cm$^{2}$/nucleon MeV]")
 
-_events = 10000
+_events = 100000
 _withPion = True
 plot_Enu_bias_numu(ax=ax[1], filename="../../FSI/NEUT_Ar40_EDRMF_numu.flat.root", label="ED-RMF", nEvents=_events, withPion=_withPion)
 plot_Enu_bias_numu(ax=ax[1], filename="../../FSI/RPWIA_1M_Cas_numu_Ar40.flat.root", label="RPWIA", nEvents=_events, withPion=_withPion)

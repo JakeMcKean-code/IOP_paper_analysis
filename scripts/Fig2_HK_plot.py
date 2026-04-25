@@ -2,7 +2,8 @@ from FlatTreeMod import *
 from collections import defaultdict
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, label, isNuBar, nEvents, plot_name):
+def plot_Enu_bias(filename, label, isNuBar, nEvents, plot_name):
+  Print(f"Reading: {filename}")
   fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
@@ -33,41 +34,18 @@ def plot_Enu_bias_numu(filename, label, isNuBar, nEvents, plot_name):
     nfsp     = tree.nfsp
     pdg      = tree.pdg
     mode     = tree.Mode
+    isCC0pi     = tree.flagCC0pi
 
-    # -------------------------
-    # CC0pi + Np selection
-    # -------------------------
-    n_proton = 0
-    has_mesons = False
+    if(isCC0pi == True):
+      # -------------------------
+      # Fill only if passed
+      # -------------------------
+      diff = Enu_QE - Enu_true
 
-    for j in range(nfsp):
-
-        apdg = abs(int(pdg[j]))
-
-        if apdg == 2212:          # proton
-            n_proton += 1
-
-        elif apdg in [111,211,221,311,321] or apdg > 3000:
-            has_mesons = True
-            break
-
-    # For numubar remove proton requirement
-    if(isNuBar == False):
-      if has_mesons or n_proton < 1:
-          continue
-    else:
-       if has_mesons:
-          continue
-
-    # -------------------------
-    # Fill only if passed
-    # -------------------------
-    diff = Enu_QE - Enu_true
-
-    diff_sel.append(diff)
-    diff_by_mode[mode].append(diff)   # per Mode
-    Enu_t_sel.append(Enu_true)
-    Enu_QE_sel.append(Enu_QE)
+      diff_sel.append(diff)
+      diff_by_mode[mode].append(diff)   # per Mode
+      Enu_t_sel.append(Enu_true)
+      Enu_QE_sel.append(Enu_QE)
 
 
   diff_sel = np.array(diff_sel)
@@ -117,15 +95,11 @@ def plot_Enu_bias_numu(filename, label, isNuBar, nEvents, plot_name):
 
   ax.legend()
   plt.gca()
-  plt.savefig(f"Fig2_plots/Fig2_HK_EnuRecoBias_{plot_name}.pdf")
-  # plt.show()
+  # plt.savefig(f"Fig2_plots/Fig2_HK_EnuRecoBias_{plot_name}.pdf")
+  plt.show()
 
   fin.Close()
-  Print(f"Done: {filename}")
 
-_events = -1
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numu.flat.root", label = r"no FSI $\nu_{\mu}$", isNuBar = False, nEvents=_events, plot_name="noFSI_numu")
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_HK_noFSI_numubar.flat.root", label = r"no FSI $\bar{\nu}_{\mu}$", isNuBar = True, nEvents=_events, plot_name="noFSI_numubar")
-
-# plot_Enu_bias_numu(filename="../../FSI/NuWro_HK_numu.flat.root", label = r"FSI $\nu_{\mu}$", isNuBar = False, nEvents=_events, plot_name="FSI_numu")
-# plot_Enu_bias_numu(filename="../../FSI/NuWro_HK_numubar.flat.root", label = r"FSI $\bar{\nu}_{\mu}$", isNuBar = True, nEvents=_events, plot_name="FSI_numubar")
+_events = 100000
+plot_Enu_bias(filename="../../Remade_April26/HK/HK_numu_noFSI.flat.root", label = r"no FSI $\nu_{\mu}$", isNuBar = False, nEvents=_events, plot_name="noFSI_numu")
+plot_Enu_bias(filename="../../Remade_April26/HK/HK_numubar_noFSI.flat.root", label = r"no FSI $\bar{\nu}_{\mu}$", isNuBar = True, nEvents=_events, plot_name="noFSI_numubar")

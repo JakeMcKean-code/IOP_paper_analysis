@@ -2,6 +2,7 @@ from FlatTreeMod import *
 ROOT.gROOT.SetBatch(True)
 
 def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
+  Print(f"Reading: {filename}")
   fig, ax = plt.subplots()
   # ---------------------------------
   # Open input file and tree
@@ -100,7 +101,6 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
         Enu_t.append(Enu_true)
       else:
          continue
-
   # ---------------------------------
   # Write output
   # ---------------------------------
@@ -126,21 +126,17 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name, withPion, xbins, ybins):
   )
     plt.colorbar(h[3], ax=ax, label="Counts")
 
-  plt.savefig(f"Fig6_plots/Fig6_DUNE_EnuRecoBias2D_{plot_name}.pdf")
+  # plt.savefig(f"Fig6_plots/Fig6_DUNE_EnuRecoBias2D_{plot_name}.pdf")
   fin.Close()
-  Print(f"Done: {filename}")
+  plt.show()
 
 
-_events = -1
+_events = 100000
 _xbins = np.arange(-0.4, 0.4, 0.01)      # bias bins
 _ybins = np.linspace(0, 3, 100)     # Enu bins (adjust range!)
 
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name = "noFSI_WithoutPion_numu", withPion=False, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numu", withPion=False, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_WithoutPion_numubar", withPion=False, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numubar", withPion=False, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numu_FSI.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numu", withPion=False, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numub_FSI.flat.root", nEvents=_events, plot_name="FSI_WithoutPion_numubar", withPion=False, xbins=_xbins, ybins=_ybins)
 
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name = "noFSI_WithPion_numu", withPion=True, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_WithPion_numu", withPion=True, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="noFSI_WithPion_numubar", withPion=True, xbins=_xbins, ybins=_ybins)
-plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_WithPion_numubar", withPion=True, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numu_FSI.flat.root", nEvents=_events, plot_name="FSI_WithPion_numu", withPion=True, xbins=_xbins, ybins=_ybins)
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numub_FSI.flat.root", nEvents=_events, plot_name="FSI_WithPion_numubar", withPion=True, xbins=_xbins, ybins=_ybins)

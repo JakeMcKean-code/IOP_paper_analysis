@@ -81,6 +81,7 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
     Enu_QE   = tree.Enu_QE*1000
     nfsp     = tree.nfsp
     pdg      = tree.pdg
+    isCC0pi     = tree.flagCC0pi
 
     # -------------------------
     # CC0pi + Np selection
@@ -89,32 +90,32 @@ def plot_Enu_bias_numu(ax, filename, nEvents):
     n_neutron = 0
     has_mesons = False
 
-    for j in range(nfsp):
+    # for j in range(nfsp):
 
-        apdg = abs(int(pdg[j]))
+    #     apdg = abs(int(pdg[j]))
 
-        if apdg == 2212:          # proton
-            n_proton += 1
-        elif apdg == 2112:
-            n_neutron += 1
+    #     if apdg == 2212:          # proton
+    #         n_proton += 1
+    #     elif apdg == 2112:
+    #         n_neutron += 1
 
-        elif apdg in [111,211,221,311,321] or apdg > 3000:
-            has_mesons = True
-            break
+    #     elif apdg in [111,211,221,311,321] or apdg > 3000:
+    #         has_mesons = True
+    #         break
 
-    # For numubar remove proton requirement
-    # if has_mesons:# or n_proton < 1:
-    if has_mesons or n_neutron < 1:
-        continue
+    # # For numubar remove proton requirement
+    # # if has_mesons:# or n_proton < 1:
+    # if has_mesons or n_neutron < 1:
+    #     continue
+    if(isCC0pi == True):
+        # -------------------------
+        # Fill only if passed
+        # -------------------------
+        diff = Enu_QE - Enu_true
 
-    # -------------------------
-    # Fill only if passed
-    # -------------------------
-    diff = Enu_QE - Enu_true
-
-    diff_sel.append(diff)
-    Enu_t_sel.append(Enu_true)
-    Enu_QE_sel.append(Enu_QE)
+        diff_sel.append(diff)
+        Enu_t_sel.append(Enu_true)
+        Enu_QE_sel.append(Enu_QE)
 
 
   diff_sel = np.array(diff_sel)

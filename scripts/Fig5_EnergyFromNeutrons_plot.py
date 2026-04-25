@@ -83,23 +83,25 @@ def plot_neutron_energy(ax, filename, nEvents):
     Print(f"Done: {filename}")
 
 
-_events = -1
+_events = 100000
 
 fig2, ax2 = plt.subplots()
-# plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events)
-# plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events)
-# ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
-# ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
-# ax2.set_ylim(0, ax2.get_ylim()[1])
-# ax2.legend(loc='best', fontsize=15)
-# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
-
-
-ax2.clear()
-plot_neutron_energy(ax=ax2, filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events)
-plot_neutron_energy(ax=ax2, filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events)
+plot_neutron_energy(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numu_noFSI.flat.root", nEvents=_events)
+plot_neutron_energy(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numu_FSI.flat.root", nEvents=_events)
 ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
 ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
 ax2.set_ylim(0, ax2.get_ylim()[1])
 ax2.legend(loc='best', fontsize=15)
-plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numubar.pdf")
+# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numu.pdf")
+plt.show()
+
+
+# ax2.clear()
+# plot_neutron_energy(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_noFSI.flat.root", nEvents=_events)
+# plot_neutron_energy(ax=ax2, filename="../../Remade_April26/DUNE/DUNE_numub_FSI.flat.root", nEvents=_events)
+# ax2.set_xlabel(r"$\sum T_{n}/q_{0}$")
+# ax2.set_ylabel(r"$\text{d}\sigma/(\text{d} \sum T_{n}/q_{0})$ [cm$^{2}$/nucleon MeV]")
+# ax2.set_ylim(0, ax2.get_ylim()[1])
+# ax2.legend(loc='best', fontsize=15)
+# plt.show()
+# plt.savefig("Fig5_plots/Fig5_DUNE_EnergyFromNeutrons_numubar.pdf")

@@ -39,7 +39,7 @@ def plot_osc_true(ax, ax_ratio, diff_sel, label, color, weights, nominal, counts
    
 
 
-def plot_EnuReco(nEvents: int, IsReco: bool):
+def plot_EnuReco(filename: str, nEvents: int, IsReco: bool):
     ## Set axis
     fig = plt.figure()
     gs = gridspec.GridSpec(2, 1, height_ratios=[1, 1], hspace=0.07)
@@ -48,7 +48,8 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
     plt.sca(ax)
     plt.setp(ax.get_xticklabels(), visible=False)
 
-    filename = "../../FSI/NuWro_HK_numu.flat.root"
+    filename = filename
+    Print(f"Reading: {filename}")
     fin = ROOT.TFile.Open(filename)
     tree = fin.Get("FlatTree_VARS")
 
@@ -74,35 +75,36 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         pdg      = tree.pdg
         nfsp     = tree.nfsp
         mode     = tree.Mode
+        isCC0pi     = tree.flagCC0pi
 
 
-        # -------------------------
-        # CC0pi + Np selection
-        # -------------------------
-        n_proton = 0
-        has_mesons = False
+        # # -------------------------
+        # # CC0pi + Np selection
+        # # -------------------------
+        # n_proton = 0
+        # has_mesons = False
 
-        for j in range(nfsp):
+        # for j in range(nfsp):
 
-            apdg = abs(int(pdg[j]))
+        #     apdg = abs(int(pdg[j]))
 
-            if apdg == 2212:          # proton
-                n_proton += 1
+        #     if apdg == 2212:          # proton
+        #         n_proton += 1
 
-            elif apdg in [111,211,221,311,321] or apdg > 3000:
-                has_mesons = True
-                break
+        #     elif apdg in [111,211,221,311,321] or apdg > 3000:
+        #         has_mesons = True
+        #         break
 
-        # For numubar remove proton requirement
-        if has_mesons or n_proton < 1:
-            continue
-        # if mode != 1: # onyl do CCQE?
+        # # For numubar remove proton requirement
+        # if has_mesons or n_proton < 1:
         #     continue
-
-        diff = Enu_QE - Enu_true
-        diff_sel.append(diff)
-        Enu_t_sel.append(Enu_true)
-        Enu_QE_sel.append(Enu_QE)
+        # # if mode != 1: # onyl do CCQE?
+        # #     continue
+        if(isCC0pi == True):
+            diff = Enu_QE - Enu_true
+            diff_sel.append(diff)
+            Enu_t_sel.append(Enu_true)
+            Enu_QE_sel.append(Enu_QE)
 
     diff_sel    = np.array(diff_sel) 
     Enu_t_sel   = np.array(Enu_t_sel)
@@ -136,7 +138,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Inc dCP", light_green, prob_plus_dcp, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel, "Dec dCP", dark_green, prob_minus_dcp, False, counts_nom)
         plot_osc_reco(ax, ax_ratio, Enu_QE_sel+5, "default PMNS, 5MeV shift", dark_blue, prob_default_nue, False, counts_nom)
-        plot_osc_reco(ax, ax_ratio, Enu_QE_sel-5, "default PMNS, -5MeV shift", dark_red, prob_default_nue, False, counts_nom)
+        # plot_osc_reco(ax, ax_ratio, Enu_QE_sel-5, "default PMNS, -5MeV shift", dark_red, prob_default_nue, False, counts_nom)
 
         # ax.legend(custom_lines, labels, loc = 'lower right')
         ax.legend(loc = 'upper right')
@@ -146,7 +148,7 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
         ax.set_xlim(150,1200)
         ax_ratio.set_xlim(150,1200)
         ax_ratio.set_ylim(0.90,1.1)
-        plt.savefig("Fig1_plots/Fig1_EnuQE_dCP_both_shifts.pdf")
+        # plt.savefig("Fig1_plots/Fig1_EnuQE_dCP_both_shifts.pdf")
 
     else:
         counts_nom = plot_osc_true(ax, ax_ratio, Enu_t_sel, "default PMNS", vivid_purple, prob_default_nue, True, counts_nom)
@@ -167,8 +169,8 @@ def plot_EnuReco(nEvents: int, IsReco: bool):
 
 
 
-# plot_EnuReco(nEvents = 200000, IsReco = False)
-plot_EnuReco(nEvents = 5000000, IsReco = True)
+plot_EnuReco("../../Remade_April26/HK/HK_numu_FSI.flat.root", nEvents = 10000, IsReco = True)
+# plot_EnuReco(nEvents = 5000000, IsReco = True)
 
 
 

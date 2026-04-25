@@ -2,7 +2,8 @@ from FlatTreeMod import *
 from collections import defaultdict
 ROOT.gROOT.SetBatch(True)
 
-def plot_Enu_bias_numu(filename, nEvents, plot_name):
+def plot_Enu_bias_numu(filename, nEvents, withPiCorr, plot_name):
+    Print(f"Reading: {filename}")
     fig, ax = plt.subplots()
     # ---------------------------------
     # Open input file and tree
@@ -31,7 +32,6 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
         ELep     = tree.ELep
         Enu_true = tree.Enu_true
         nfsp     = tree.nfsp
-        mode     = tree.Mode
 
         E  = tree.E
         px = tree.px
@@ -109,8 +109,6 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
         bias_wo   = enuhad_wo   - Enu_true
         bias_with = enuhad_with - Enu_true
 
-        # if(has_neutron==False and bias_with < -0.2):
-            # Print(f"bias: {bias_with}| mode: {mode}| PDGs: {event_pdg}")
         if(bad_event == False):
             # Total
             bias_wo_list.append(bias_wo)
@@ -137,20 +135,25 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
         True:  dict(color="purple", linestyle="--",  label="With neutron"),
     }
 
-    ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_with_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass correction")
-
-    # Create a matching line handle for legend
-    custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
-    labels.append("w/o pion mass correction")
-
-    # ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_wo_list), color=dark_red,linewidth=1.5, label = "w/ pion mass")
-    # custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
-    # labels.append("w/ pion mass")
+    if(withPiCorr == False):
+        ax.hist(bias_wo_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_with_list), color=dark_blue,linewidth=1.5, label = "w/o pion mass correction")
+        custom_lines.append(Line2D([0], [0], color=dark_blue, lw=2, linestyle='-'))
+        labels.append("w/o pion mass correction")
+    else:
+        ax.hist(bias_with_list, bins=np.arange(-3, 1, step=0.04), histtype='step', weights=np.ones_like(bias_with_list), color=dark_red,linewidth=1.5, label = "w/ pion mass")
+        custom_lines.append(Line2D([0], [0], color=dark_red, lw=2, linestyle='-'))
+        labels.append("w/ pion mass")
 
     bins = np.arange(-3, 1, step=0.04)
     # w/ pion mass correction, by neutron
-    vals_no  = bias_wo_by_n[False]
-    vals_yes = bias_wo_by_n[True]
+    vals_no  = []
+    vals_yes = []
+    if(withPiCorr == False):
+        vals_no  = bias_wo_by_n[False]
+        vals_yes = bias_wo_by_n[True]
+    else:
+        vals_no  = bias_with_by_n[False]
+        vals_yes = bias_with_by_n[True]
 
     ax.hist(
         [vals_no, vals_yes],   # list of arrays
@@ -163,14 +166,11 @@ def plot_Enu_bias_numu(filename, nEvents, plot_name):
     ax.legend()
 
     plt.gca()
-    plt.savefig(f"Fig2_plots/Fig2_DUNE_EnuRecoBias_{plot_name}.pdf")
-    # plt.show()
+    # plt.savefig(f"Fig2_plots/Fig2_DUNE_EnuRecoBias_{plot_name}.pdf")
+    plt.show()
     fin.Close()
-    Print(f"Done: {filename}")
 
-_events = -1
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numu.flat.root", nEvents=_events, plot_name="WithoutPion_noFSI_numu")
-plot_Enu_bias_numu(filename="../../noFSI/NuWro_Ar40_noFSI_numubar.flat.root", nEvents=_events, plot_name="WithoutPion_noFSI_numubar")
+_events = 10000
 
-# plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numu.flat.root", nEvents=_events, plot_name="FSI_numu")
-# plot_Enu_bias_numu(filename="../../FSI/NuWro_Ar40_numubar.flat.root", nEvents=_events, plot_name="FSI_numubar")
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numu_noFSI.flat.root", nEvents=_events, withPiCorr=True, plot_name="WithoutPion_noFSI_numu")
+plot_Enu_bias_numu(filename="../../Remade_April26/DUNE/DUNE_numub_noFSI.flat.root", nEvents=_events, withPiCorr=True, plot_name="WithoutPion_noFSI_numubar")
